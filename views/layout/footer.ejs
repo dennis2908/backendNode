@@ -1,0 +1,15 @@
+<script type="text/javascript" src="/lib/function_<%=author%>.js"></script>
+<% if(author=="Admin"){ %>
+<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+<script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/js/jquery.ui.touch-punch.min.js"></script>	
+<% include ../layout/footer_dev.ejs %>
+<% } %>
+<% if(author=="Admin"){ %>
+<% include ../layout/footer_menu_Admin.ejs %>
+<script type="text/javascript" src="/lib/timer.js"></script>
+<% } else{%>	
+<script type="text/javascript" src="/lib/timer_guest.js"></script>
+<% }%>	
+</body>
+</html>

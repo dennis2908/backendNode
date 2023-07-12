@@ -1,0 +1,1 @@
+INSERT INTO "employee"("id", "username", "firstname", "lastname", "email", "birthdate", "basicsalary", "status", "groupdata", "description") VALUES (1, 'dennis', 'dennis', 'dennis', 'dennis@yahoo.com', '2023-06-08', '1000000.00', '1', '1', 'ddndndnddn');
