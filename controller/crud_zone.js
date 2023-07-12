@@ -68,7 +68,7 @@ exports.get_all_data  = (async function(req, res){
 
 exports.save_data  = (async function(req, res){	
 	pool.query(
-  'insert into employee(username,firstName,lastName,email,birthDate,basicsalary,status,description,groupdata) values ($1,$2,$3,$4,$5,$6,$7,now(),$8)',
+  'insert into employee(username,firstName,lastName,email,birthDate,basicsalary,status,description,groupdata,created_date) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,now())',
   [req.body.username,req.body.firstname,req.body.lastname,req.body.email,req.body.birthdate,req.body.basicsalary,req.body.status,req.body.description,req.body.groupdata],
   (err, res) => {
    if (err) console.log(err);

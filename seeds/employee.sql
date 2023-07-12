@@ -31,7 +31,7 @@ CREATE TABLE "employee" (
   "status" varchar(255) COLLATE "pg_catalog"."default",
   "groupdata" varchar(255) COLLATE "pg_catalog"."default",
   "description" varchar(255) COLLATE "pg_catalog"."default",
-  "createdDate" TIMESTAMP
+  "created_date" TIMESTAMP
 )
 ;
 
