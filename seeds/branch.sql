@@ -23,8 +23,9 @@ DROP TABLE IF EXISTS "branch";
 CREATE TABLE "branch" (
   "id" SERIAL,
   "branch_name" varchar(255) COLLATE "pg_catalog"."default"
-)
-;
+);
+
+ALTER SEQUENCE branch_id_seq RESTART WITH 5;
 
 -- ----------------------------
 -- Records of branch

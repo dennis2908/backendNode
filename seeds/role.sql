@@ -26,7 +26,7 @@ CREATE TABLE "role" (
   "role_assign" varchar(200) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying
 )
 ;
-
+ALTER SEQUENCE role_id_seq RESTART WITH 2;
 -- ----------------------------
 -- Records of role
 -- ----------------------------

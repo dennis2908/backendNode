@@ -34,6 +34,7 @@ CREATE TABLE "employee" (
   "created_date" TIMESTAMP
 )
 ;
+ALTER SEQUENCE employee_id_seq RESTART WITH 2;
 
 -- ----------------------------
 -- Records of employee

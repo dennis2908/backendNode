@@ -19,8 +19,8 @@
 -- ----------------------------
 -- Table structure for users
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."users";
-CREATE TABLE "public"."users" (
+DROP TABLE IF EXISTS "users";
+CREATE TABLE "users" (
   "id" SERIAL,
   "username" varchar(300) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying,
   "name" varchar(120) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying,
@@ -31,7 +31,9 @@ CREATE TABLE "public"."users" (
 )
 ;
 
+ALTER SEQUENCE users_id_seq RESTART WITH 2;
+
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO "public"."users" VALUES (1, 'dennis', 'dennis', 'dennisdennis', 'manullang_d@yahoo.com', '2023-06-08', 1);
+INSERT INTO "users" VALUES (1, 'dennis', 'dennis', '$2b$10$IxjIL5H0XscxR9Z7GNQZruMc776WKuyH6AXGhi6oYK1SxMPO1Dy2C', 'manullang_d@yahoo.com', '2023-06-08', 1);

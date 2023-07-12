@@ -28,6 +28,7 @@ CREATE TABLE "assignment" (
   "assignment_name" varchar(50) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying
 )
 ;
+ALTER SEQUENCE assignment_id_seq RESTART WITH 3;
 
 -- ----------------------------
 -- Records of assignment

@@ -54,14 +54,14 @@ exports.get_data  = (async function(req, res){
   if(parseInt(req.params.offset) < 0)
 	  req.params.offset = 0
   
-  let _sql_rest_url = "SELECT users.*,role_name from users join role on role.id = users.m_role "
+  let _sql_rest_url = "SELECT distinct(users.id) as idUser,users.*,role_name from users join role on users.m_role = role.id "
   _sql_rest_url += searchdata+ascdesc+" limit "+req.params.limit+" offset "+req.params.offset
+  console.log(_sql_rest_url);
   var rows = await pool.query(_sql_rest_url)
   res.json(rows.rows); 
    
 });
 
-/*
 exports.doLogin  = (async function(req, res){
 
     let _sql_rest_url = "SELECT users.*,role_name,role_assign from users join role on role.id = users.m_role where username = '"+req.body.username+"'"
@@ -79,19 +79,17 @@ exports.doLogin  = (async function(req, res){
    
 });
 
-*/
+// exports.doLogin  = (async function(req, res){
 
-exports.doLogin  = (async function(req, res){
-
-    let _sql_rest_url = "SELECT users.*,role_name,role_assign from users join role on role.id = users.m_role where username = '"+req.body.username+"' and password = '"+req.body.password+"'"
-	var rows = await pool.query(_sql_rest_url)
-	if(Object.keys(rows.rows).length > 0){
-		res.json(rows.rows[0]);	
-	}
-	else
-	   res.json(false); 
+//     let _sql_rest_url = "SELECT users.*,role_name,role_assign from users join role on role.id = users.m_role where username = '"+req.body.username+"' and password = '"+req.body.password+"'"
+// 	var rows = await pool.query(_sql_rest_url)
+// 	if(Object.keys(rows.rows).length > 0){
+// 		res.json(rows.rows[0]);	
+// 	}
+// 	else
+// 	   res.json(false); 
    
-});
+// });
 
 exports.get_data_by_id  = (async function(req, res){
 

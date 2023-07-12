@@ -28,6 +28,7 @@ CREATE TABLE "company" (
   "m_branch" int2,
   "phone" varchar(15) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying
 );
+ALTER SEQUENCE company_id_seq RESTART WITH 4;
 
 -- ----------------------------
 -- Records of company
