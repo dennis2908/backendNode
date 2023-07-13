@@ -56,7 +56,7 @@ exports.get_data  = (async function(req, res){
   
   let _sql_rest_url = "SELECT distinct(users.id) as idUser,users.*,role_name from users join role on users.m_role = role.id "
   _sql_rest_url += searchdata+ascdesc+" limit "+req.params.limit+" offset "+req.params.offset
-  console.log(_sql_rest_url);
+//   console.log(_sql_rest_url);
   var rows = await pool.query(_sql_rest_url)
   res.json(rows.rows); 
    

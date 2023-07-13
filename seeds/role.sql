@@ -22,8 +22,8 @@
 DROP TABLE IF EXISTS "role";
 CREATE TABLE "role" (
   "id" SERIAL,
-  "role_name" varchar(50) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying,
-  "role_assign" varchar(200) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying
+  "role_name" varchar(100) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying,
+  "role_assign" varchar(20000) COLLATE "pg_catalog"."default" DEFAULT NULL::character varying
 )
 ;
 ALTER SEQUENCE role_id_seq RESTART WITH 2;
