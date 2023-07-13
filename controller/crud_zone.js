@@ -68,8 +68,8 @@ exports.get_all_data  = (async function(req, res){
 
 exports.save_data  = (async function(req, res){	
 	pool.query(
-  'insert into employee(username,firstName,lastName,email,birthDate,basicsalary,status,description,groupdata,created_date) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,now())',
-  [req.body.username,req.body.firstname,req.body.lastname,req.body.email,req.body.birthdate,req.body.basicsalary,req.body.status,req.body.description,req.body.groupdata],
+  'insert into employee(username,firstName,lastName,email,birthDate,basicsalary,status,groupdata,created_date) values ($1,$2,$3,$4,$5,$6,$7,$8,now())',
+  [req.body.username,req.body.firstname,req.body.lastname,req.body.email,req.body.birthdate,req.body.basicsalary,req.body.status,req.body.groupdata],
   (err, res) => {
    if (err) console.log(err);
 
@@ -81,8 +81,8 @@ exports.save_data  = (async function(req, res){
 
 exports.update_data  = (async function(req, res){	
 	pool.query(
-  'update employee set username=$1,firstName=$2,lastName=$3,email=$4,birthDate=$5,basicsalary=$6,status=$7,description=now(),groupdata=$8 where id = $9',
-  [req.body.username,req.body.firstname,req.body.lastname,req.body.email,req.body.birthdate,req.body.basicsalary,req.body.status,req.body.description,req.body.groupdata,req.params.id],
+  'update employee set username=$1,firstName=$2,lastName=$3,email=$4,birthDate=$5,basicsalary=$6,status=$7,created_date=now(),groupdata=$8 where id = $9',
+  [req.body.username,req.body.firstname,req.body.lastname,req.body.email,req.body.birthdate,req.body.basicsalary,req.body.status,req.body.groupdata,req.params.id],
   (err, res) => {
    if (err) console.log(err);
 

@@ -30,7 +30,6 @@ CREATE TABLE "employee" (
   "basicsalary" numeric(20,2),
   "status" varchar(255) COLLATE "pg_catalog"."default",
   "groupdata" varchar(255) COLLATE "pg_catalog"."default",
-  "description" varchar(255) COLLATE "pg_catalog"."default",
   "created_date" TIMESTAMP
 )
 ;
@@ -39,4 +38,4 @@ ALTER SEQUENCE employee_id_seq RESTART WITH 2;
 -- ----------------------------
 -- Records of employee
 -- ----------------------------
-INSERT INTO "employee" VALUES (1, 'dennis', 'dennis', 'dennis', 'dennis@yahoo.com', '2023-06-08', 1000000.00, '1', '1', 'ddndndnddn');
+INSERT INTO "employee" VALUES (1, 'dennis', 'dennis', 'dennis', 'dennis@yahoo.com', '2023-06-08', 1000000.00, 'single', 'System Analyst',now());
