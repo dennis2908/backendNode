@@ -27,7 +27,7 @@ CREATE TABLE "employee" (
   "lastname" varchar(255) COLLATE "pg_catalog"."default",
   "email" varchar(255) COLLATE "pg_catalog"."default",
   "birthdate" date,
-  "basicsalary" numeric(10,2),
+  "basicsalary" numeric(20,2),
   "status" varchar(255) COLLATE "pg_catalog"."default",
   "groupdata" varchar(255) COLLATE "pg_catalog"."default",
   "description" varchar(255) COLLATE "pg_catalog"."default",
