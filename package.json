@@ -24,6 +24,7 @@
     "crypto": "^1.0.1",
     "ejs-blocks": "^0.1.4",
     "ejs-mate": "^3.0.0",
+    "exceljs": "^4.4.0",
     "express": "^4.19.2",
     "express-ejs-layouts": "^2.5.0",
     "express-flash-messages": "^0.1.1",

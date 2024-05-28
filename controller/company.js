@@ -14,6 +14,8 @@ let redisClient = require("../redis/redis.js");
 
 const crypto = require("crypto");
 
+const excelJS = require("exceljs");
+
 /** Sync */
 function randomStringAsBase64Url(size) {
   return crypto.randomBytes(size).toString("base64url");
@@ -87,6 +89,58 @@ exports.get_all_data = async function (req, res) {
   const dataGet = await redisClient.get(token);
   console.log(dataGet);
   res.json(dataRet);
+};
+
+exports.excel_all_data = async function (req, res) {
+  var _sql_rest_url = "SELECT * from company order by company_name";
+  var rows = await pool.query(_sql_rest_url);
+  const workbook = new excelJS.Workbook(); // Create a new workbook
+  const worksheet = workbook.addWorksheet("My Users");
+  const path = "./files";
+  worksheet.columns = [
+    { header: "No", key: "no", width: 10 },
+    { header: "Company Name", key: "company_name", width: 10 },
+    { header: "Address", key: "address", width: 10 },
+    { header: "Email", key: "email", width: 10 },
+    { header: "Branch", key: "m_branch", width: 10 },
+    { header: "Phone", key: "phone", width: 10 }
+  ];
+  let counter = 1;
+  rows.rows.forEach((row) => {
+    row.no = counter;
+    worksheet.addRow(row);
+    counter++;
+  }); // Add data in worksheet  counter++;});
+  worksheet.getRow(1).eachCell((cell) => {
+    cell.font = { bold: true };
+  });
+  try {
+    var d = new Date(); // for now
+    d.getHours(); // => 9
+    d.getMinutes(); // =>  30
+    d.getSeconds(); // => 51
+
+    const fileName =
+      "/company" +
+      d.getDate() +
+      d.getMonth() +
+      d.getFullYear() +
+      d.getHours() +
+      d.getMinutes() +
+      d.getSeconds();
+
+    const data = await workbook.xlsx
+      .writeFile(`${path}/` + fileName + `.xlsx`)
+      .then(() => {
+        res.send({
+          status: "success",
+          message: "file successfully downloaded",
+          path: `${path}/` + fileName + `.xlsx`
+        });
+      });
+  } catch (err) {
+    res.send({ status: "error", message: "Something went wrong" });
+  }
 };
 
 exports.save_data = async function (req, res) {
