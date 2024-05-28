@@ -10,6 +10,15 @@ const pool = require("../database.js");
 
 var amqp = require("amqplib/callback_api");
 
+let redisClient = require("../redis/redis.js");
+
+const crypto = require("crypto");
+
+/** Sync */
+function randomStringAsBase64Url(size) {
+  return crypto.randomBytes(size).toString("base64url");
+}
+
 exports.get_data = async function (req, res) {
   var searchdata = "";
   //console.log(req.query)
@@ -45,20 +54,39 @@ exports.get_data = async function (req, res) {
     " offset " +
     req.params.offset;
   var rows = await pool.query(_sql_rest_url);
-  res.json(rows.rows);
+
+  const token = randomStringAsBase64Url(32);
+  let dataRet = { data: rows.rows, redisToken: token };
+
+  redisClient.set(token, JSON.stringify(dataRet));
+  const dataGet = await redisClient.get(token);
+  console.log(dataGet);
+  res.json(dataRet);
 };
 exports.get_data_by_id = async function (req, res) {
   if (typeof req.params.id !== "undefined") {
     var _sql_rest_url = "SELECT * from company where id = " + req.params.id;
     var rows = await pool.query(_sql_rest_url);
-    res.json(rows.rows[0]);
+    const token = randomStringAsBase64Url(32);
+    let dataRet = { data: rows.rows[0], redisToken: token };
+
+    redisClient.set(token, JSON.stringify(dataRet));
+    const dataGet = await redisClient.get(token);
+    console.log(dataGet);
+    res.json(dataRet);
   }
 };
 
 exports.get_all_data = async function (req, res) {
   var _sql_rest_url = "SELECT * from company order by company_name";
   var rows = await pool.query(_sql_rest_url);
-  res.json(rows.rows);
+  const token = randomStringAsBase64Url(32);
+  let dataRet = { data: rows.rows, redisToken: token };
+
+  redisClient.set(token, JSON.stringify(dataRet));
+  const dataGet = await redisClient.get(token);
+  console.log(dataGet);
+  res.json(dataRet);
 };
 
 exports.save_data = async function (req, res) {

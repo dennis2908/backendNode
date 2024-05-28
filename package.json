@@ -4,7 +4,7 @@
   "description": "DMD",
   "main": "main.js",
   "scripts": {
-    "node": "node main.js",
+    "node": "node main.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node main.js",
     "angular": "npm start --prefix AngularDM",
@@ -42,6 +42,8 @@
     "pg-format": "^1.0.4",
     "react-popup": "^0.10.0",
     "react-router": "^5.2.0",
-    "save": "^2.4.0"
+    "redis": "^4.6.14",
+    "save": "^2.4.0",
+    "util": "^0.12.5"
   }
 }
