@@ -145,6 +145,8 @@ var company = require("./routes/company.js");
 
 var assignment = require("./routes/assignment.js");
 
+var receiver = require("./routes/receiver.js");
+
 app.post("/send", function (req, res) {
   const rabbit = new Send().execute(req.body);
 
@@ -163,6 +165,8 @@ app.use(
     graphiql: true
   })
 );
+
+app.use("/", receiver);
 
 app.use("/crud", crud);
 
@@ -207,6 +211,6 @@ app.post("/loginFrontEnd", (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 8000, function () {
-  console.log("server running on port 8000", "");
+app.listen(process.env.PORT || 8009, function () {
+  console.log("server running on port 8009", "");
 });
