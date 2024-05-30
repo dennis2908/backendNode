@@ -9,6 +9,16 @@ const bodyParser = require("body-parser");
 
 const expressGraphQL = require("express-graphql").graphqlHTTP;
 
+require("dotenv").config();
+
+const mongoose = require("mongoose");
+const mongoString = process.env.MONGO_URL;
+
+mongoose
+  .connect("mongodb://127.0.0.1:27017")
+  .then(() => console.log("mongoDB Connected"))
+  .catch((err) => console.log(err));
+
 const { buildSchema } = require("graphql"); // GraphQL schema
 var schema = buildSchema(`
     type Query {

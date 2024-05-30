@@ -8,6 +8,8 @@ var async = require("async");
 const format = require("pg-format");
 const pool = require("../database.js");
 
+const userlog = require("../mongo_models/user_log.js");
+
 var amqp = require("amqplib/callback_api");
 
 let redisClient = require("../redis/redis.js");
@@ -16,12 +18,26 @@ const crypto = require("crypto");
 
 const excelJS = require("exceljs");
 
+var d = new Date(); // for now
+
 /** Sync */
 function randomStringAsBase64Url(size) {
   return crypto.randomBytes(size).toString("base64url");
 }
 
 exports.get_data = async function (req, res) {
+  const saveuserlog = new userlog({
+    type: "Get Data",
+    table: "Company",
+    createdTime:
+      d.getDate() +
+      d.getMonth() +
+      d.getFullYear() +
+      d.getHours() +
+      d.getMinutes() +
+      d.getSeconds()
+  });
+  await saveuserlog.save();
   var searchdata = "";
   //console.log(req.query)
   if (req.query) {
@@ -67,6 +83,18 @@ exports.get_data = async function (req, res) {
 };
 exports.get_data_by_id = async function (req, res) {
   if (typeof req.params.id !== "undefined") {
+    const saveuserlog = new userlog({
+      type: "Get Data By Id",
+      table: "Company",
+      createdTime:
+        d.getDate() +
+        d.getMonth() +
+        d.getFullYear() +
+        d.getHours() +
+        d.getMinutes() +
+        d.getSeconds()
+    });
+    await saveuserlog.save();
     var _sql_rest_url = "SELECT * from company where id = " + req.params.id;
     var rows = await pool.query(_sql_rest_url);
     const token = randomStringAsBase64Url(32);
@@ -80,6 +108,18 @@ exports.get_data_by_id = async function (req, res) {
 };
 
 exports.get_all_data = async function (req, res) {
+  const saveuserlog = new userlog({
+    type: "Get All Data",
+    table: "Company",
+    createdTime:
+      d.getDate() +
+      d.getMonth() +
+      d.getFullYear() +
+      d.getHours() +
+      d.getMinutes() +
+      d.getSeconds()
+  });
+  await saveuserlog.save();
   var _sql_rest_url = "SELECT * from company order by company_name";
   var rows = await pool.query(_sql_rest_url);
   const token = randomStringAsBase64Url(32);
@@ -87,11 +127,24 @@ exports.get_all_data = async function (req, res) {
 
   redisClient.set(token, JSON.stringify(dataRet));
   const dataGet = await redisClient.get(token);
+
   console.log(dataGet);
   res.json(dataRet);
 };
 
 exports.excel_all_data = async function (req, res) {
+  const saveuserlog = new userlog({
+    type: "Excel All Data",
+    table: "Company",
+    createdTime:
+      d.getDate() +
+      d.getMonth() +
+      d.getFullYear() +
+      d.getHours() +
+      d.getMinutes() +
+      d.getSeconds()
+  });
+  await saveuserlog.save();
   var _sql_rest_url = "SELECT * from company order by company_name";
   var rows = await pool.query(_sql_rest_url);
   const workbook = new excelJS.Workbook(); // Create a new workbook
@@ -115,11 +168,6 @@ exports.excel_all_data = async function (req, res) {
     cell.font = { bold: true };
   });
   try {
-    var d = new Date(); // for now
-    d.getHours(); // => 9
-    d.getMinutes(); // =>  30
-    d.getSeconds(); // => 51
-
     const fileName =
       "/company" +
       d.getDate() +
@@ -158,6 +206,19 @@ exports.save_data = async function (req, res) {
   //   }
   // );
 
+  const saveuserlog = new userlog({
+    type: "Save Data",
+    table: "Company",
+    createdTime:
+      d.getDate() +
+      d.getMonth() +
+      d.getFullYear() +
+      d.getHours() +
+      d.getMinutes() +
+      d.getSeconds()
+  });
+  await saveuserlog.save();
+
   amqp.connect("amqp://localhost", function (error0, connection) {
     if (error0) {
       throw error0;
@@ -180,6 +241,18 @@ exports.save_data = async function (req, res) {
 };
 
 exports.update_data = async function (req, res) {
+  const saveuserlog = new userlog({
+    type: "Update Data",
+    table: "Company",
+    createdTime:
+      d.getDate() +
+      d.getMonth() +
+      d.getFullYear() +
+      d.getHours() +
+      d.getMinutes() +
+      d.getSeconds()
+  });
+  await saveuserlog.save();
   amqp.connect("amqp://localhost", function (error0, connection) {
     if (error0) {
       throw error0;
@@ -204,6 +277,18 @@ exports.update_data = async function (req, res) {
 };
 
 exports.delete_data = async function (req, res) {
+  const saveuserlog = new userlog({
+    type: "Delete Data",
+    table: "Company",
+    createdTime:
+      d.getDate() +
+      d.getMonth() +
+      d.getFullYear() +
+      d.getHours() +
+      d.getMinutes() +
+      d.getSeconds()
+  });
+  await saveuserlog.save();
   pool.query(
     "delete from company where id = $1",
     [req.params.id],
