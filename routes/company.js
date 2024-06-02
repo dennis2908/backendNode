@@ -6,6 +6,7 @@ router.get("/get_data/:offset/:limit/:sort", company.get_data);
 router.get("/get_data_by_id/:id", company.get_data_by_id);
 router.get("/get_all_data", company.get_all_data);
 router.get("/excel_all_data", company.excel_all_data);
+router.get("/excel_to_db", company.excel_to_db);
 router.post("/save_data", company.save_data);
 router.put("/update_data/:id", company.update_data);
 router.delete("/delete_data/:id", company.delete_data);

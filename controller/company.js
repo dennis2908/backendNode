@@ -191,6 +191,54 @@ exports.excel_all_data = async function (req, res) {
   }
 };
 
+exports.excel_to_db = async function (req, res) {
+  const xlsx = require("xlsx");
+  const workbook = xlsx.readFile("upload/company252024181837.xlsx");
+  const workbook_sheet = workbook.SheetNames;
+  let workbook_response = xlsx.utils.sheet_to_json(
+    // Step 4
+    workbook.Sheets[workbook_sheet[0]]
+  );
+  for (let i = 0; i < workbook_response.length; i++) {
+    var saveuserlog = new userlog({
+      type: "Save Data",
+      table: "Company",
+      createdTime:
+        d.getDate() +
+        d.getMonth() +
+        d.getFullYear() +
+        d.getHours() +
+        d.getMinutes() +
+        d.getSeconds()
+    });
+    await saveuserlog.save();
+
+    await amqp.connect("amqp://localhost", function (error0, connection) {
+      if (error0) {
+        throw error0;
+      }
+      connection.createChannel(function (error1, channel) {
+        if (error1) {
+          throw error1;
+        }
+        var queue = "save.company";
+
+        channel.assertQueue(queue, {
+          durable: false
+        });
+
+        channel.sendToQueue(
+          queue,
+          Buffer.from(JSON.stringify(workbook_response[i]))
+        );
+        console.log(" [x] Sent %s", JSON.stringify(workbook_response[i]));
+      });
+    });
+  }
+
+  await res.json("data excel has been load to database");
+};
+
 exports.save_data = async function (req, res) {
   // pool.query(
   //   "insert into company(company_name,address,email,m_branch,phone) values ($1,$2,$3,$4,$5)",
