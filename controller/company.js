@@ -127,7 +127,6 @@ exports.get_all_data = async function (req, res) {
 
   redisClient.set(token, JSON.stringify(dataRet));
   const dataGet = await redisClient.get(token);
-
   console.log(dataGet);
   res.json(dataRet);
 };
@@ -344,5 +343,25 @@ exports.delete_data = async function (req, res) {
       if (err) console.log(err);
     }
   );
+
+  amqp.connect("amqp://localhost", function (error0, connection) {
+    if (error0) {
+      throw error0;
+    }
+    connection.createChannel(function (error1, channel) {
+      if (error1) {
+        throw error1;
+      }
+      var queue = "delete.company";
+
+      channel.assertQueue(queue, {
+        durable: false
+      });
+      req.body.id = req.params.id;
+
+      channel.sendToQueue(queue, Buffer.from(req.params.id));
+      console.log(" [x] Sent %s", req.params.id);
+    });
+  });
   res.json(true);
 };
