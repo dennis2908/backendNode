@@ -1,9 +1,15 @@
+const dotenv = require("dotenv");
+const path = require("path");
+dotenv.config({ path: path.join(__dirname, ".env") });
+
+console.log(process.env);
+
 var Pusher = require("pusher"); //create a instance of pusher using your credentials
 var pusher = new Pusher({
-  appId: "705473",
-  key: "b9e4d6190581d989a6e2",
-  secret: "629f95f4aa4563d80845",
-  cluster: "ap1",
+  appId: process.env.pusher_appId,
+  key: process.env.pusher_key,
+  secret: process.env.pusher_secret,
+  cluster: process.env.pusher_cluster,
   encrypted: true
 });
 
