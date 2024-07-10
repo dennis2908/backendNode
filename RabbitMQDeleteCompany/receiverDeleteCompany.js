@@ -5,9 +5,6 @@ exports.load = async function () {
 
   company = require("../Pusher/Company/PusherLoadAllData.js");
 
-  const { Queue, Worker } = require("bullmq");
-  const redisOptions = { host: "localhost", port: 6379 };
-
   amqp.connect("amqp://localhost", function (error0, connection) {
     if (error0) {
       throw error0;
@@ -28,36 +25,24 @@ exports.load = async function () {
           console.log(" [x] Received %s", msg.content.toString());
           const id = msg.content.toString();
 
-          const DeleteCompany = new Queue("DeleteCompany", {
-            connection: redisOptions
-          });
+          const deleteComp = async function (data) {
+            await sleep(3000);
+            console.log(1212, data);
+            pool.query("delete from company where id = " + data, (err, res) => {
+              if (err) console.log(err);
+            });
+          };
 
-          console.log(12122, id);
+          const celery = require("celery-node");
 
-          const job = await DeleteCompany.add("DeleteCompany", id, {
-            delay: 2000
-          });
+          const sleep = require("sleep-promise");
 
-          const worker = new Worker(
-            "DeleteCompany",
-            async (data) => {
-              pool.query(
-                "delete from company where id = " + data.data,
-                (err, res) => {
-                  if (err) console.log(err);
-                }
-              );
-            },
-            { connection }
+          const worker = celery.createWorker(
+            "amqp://guest:guest@localhost:5672//",
+            "amqp://localhost"
           );
-
-          worker.on("completed", (job) => {
-            console.log(`Job ${job.id} completed successfully`);
-          });
-
-          worker.on("failed", (job, err) => {
-            console.error(`Job ${job.id} failed with error ${err.message}`);
-          });
+          worker.register("delete.company", deleteComp(id));
+          worker.start();
 
           company.load_all_data();
         },
