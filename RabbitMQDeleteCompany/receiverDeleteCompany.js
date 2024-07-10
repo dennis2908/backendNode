@@ -5,6 +5,9 @@ exports.load = async function () {
 
   company = require("../Pusher/Company/PusherLoadAllData.js");
 
+  const { Queue, Worker } = require("bullmq");
+  const redisOptions = { host: "localhost", port: 6379 };
+
   amqp.connect("amqp://localhost", function (error0, connection) {
     if (error0) {
       throw error0;
@@ -21,13 +24,41 @@ exports.load = async function () {
 
       channel.consume(
         queue,
-        function (msg) {
+        async function (msg) {
           console.log(" [x] Received %s", msg.content.toString());
-          const id = msg.content;
+          const id = msg.content.toString();
 
-          pool.query("delete from company where id = " + id, (err, res) => {
-            if (err) console.log(err);
+          const DeleteCompany = new Queue("DeleteCompany", {
+            connection: redisOptions
           });
+
+          console.log(12122, id);
+
+          const job = await DeleteCompany.add("DeleteCompany", id, {
+            delay: 2000
+          });
+
+          const worker = new Worker(
+            "DeleteCompany",
+            async (data) => {
+              pool.query(
+                "delete from company where id = " + data.data,
+                (err, res) => {
+                  if (err) console.log(err);
+                }
+              );
+            },
+            { connection }
+          );
+
+          worker.on("completed", (job) => {
+            console.log(`Job ${job.id} completed successfully`);
+          });
+
+          worker.on("failed", (job, err) => {
+            console.error(`Job ${job.id} failed with error ${err.message}`);
+          });
+
           company.load_all_data();
         },
         {

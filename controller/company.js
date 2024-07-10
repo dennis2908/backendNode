@@ -120,7 +120,7 @@ exports.get_all_data = async function (req, res) {
       d.getSeconds()
   });
   await saveuserlog.save();
-  var _sql_rest_url = "SELECT * from company order by company_name";
+  var _sql_rest_url = "SELECT * from company order by id DESC";
   var rows = await pool.query(_sql_rest_url);
   const token = randomStringAsBase64Url(32);
   let dataRet = { data: rows.rows, redisToken: token };

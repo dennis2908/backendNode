@@ -10,7 +10,7 @@ var pusher = new Pusher({
   key: process.env.pusher_key,
   secret: process.env.pusher_secret,
   cluster: process.env.pusher_cluster,
-  encrypted: true
+  useTLS: true
 });
 
 module.exports = pusher;
