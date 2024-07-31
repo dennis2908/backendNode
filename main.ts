@@ -89,46 +89,12 @@ app.use("/company", company);
 
 app.use("/assignment", assignment);
 
-app.get("/login", (req, res) => {
-  res.render("Login/index.ejs");
-});
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
 
-app.post("/send", function (req, res) {
-  const rabbit = new Send().execute(req.body);
-
-  res.json({
-    status: "OKE",
-    statusCode: 201,
-    message: "Message success send to rabbitmq server."
-  });
-});
-
-app.post("/login", (req, res) => {
-  var username = req.body.username;
-  var password = req.body.password;
-
-  if (username == "console" && password == "myconsole") {
-    req.session.username = username;
-  }
-
-  res.redirect("/");
-});
-
-app.post("/loginFrontEnd", (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
-
-  if (username == "console" && password == "myconsole") {
-    res.json(username);
-  } else {
-    res.json(false);
-  }
-});
 
 app.listen(process.env.PORT || 8000, function () {
   console.log("server running on port 8000", "");

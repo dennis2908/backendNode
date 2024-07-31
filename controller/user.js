@@ -5,10 +5,16 @@ const express = require('express');
 const app = express();
 var async = require('async');
 
+const jwt = require('jsonwebtoken');
+
+const dotenv = require('dotenv');
+
 const format = require('pg-format');
 const pool = require('../database.js');
 
  const bcrypt = require("bcrypt");
+
+ dotenv.config();
 
 exports.get_data  = (async function(req, res){
 	
@@ -69,7 +75,14 @@ exports.doLogin  = (async function(req, res){
 	if(Object.keys(rows.rows).length > 0){
 		const validPassword = await bcrypt.compare(req.body.password, rows.rows[0].password);
 		if(validPassword){
-			res.json(rows.rows[0]);			
+			let jwtSecretKey = process.env.JWT_SECRET_KEY;
+			let data = {
+				time: Date(),
+				userId: 12,
+			}
+
+			const token = jwt.sign(data, jwtSecretKey);
+			res.json({"token":token});			
 		}
 		else 
 			 res.json(false); 
