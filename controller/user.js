@@ -2,6 +2,8 @@ const path = require('path');
 var async = require('async');
 var flash = require('express-flash-messages')
 const express = require('express');
+
+const session = require('express-session');
 const app = express();
 var async = require('async');
 
@@ -13,6 +15,8 @@ const format = require('pg-format');
 const pool = require('../database.js');
 
  const bcrypt = require("bcrypt");
+
+
 
  dotenv.config();
 
@@ -81,8 +85,17 @@ exports.doLogin  = (async function(req, res){
 				userId: 12,
 			}
 
-			const token = jwt.sign(data, jwtSecretKey);
-			res.json({"token":token});			
+			const token = jwt.sign(data, jwtSecretKey, {
+				expiresIn: '30m'
+			});
+
+			const refreshToken = jwt.sign({
+				data
+			}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+	 
+
+			req.session.jwt = refreshToken;
+			res.status(200).send({"token":token});
 		}
 		else 
 			 res.json(false); 

@@ -25,25 +25,26 @@ var ejs = require("ejs");
 ejs.open = "{{";
 ejs.close = "}}";
 
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 var session = require("express-session");
 
-import { Send } from "./send/send.js";
+const cookieParser = require('cookie-parser');
 
-app.use(
-  session({
-    secret: "32832113209138209132890oaejlkewjlkweqjlkweqjlkqewqewljkljk",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      expires: new Date(253402300000000)
-    }
-  })
-);
+app.use(cookieParser('MY SECRET'));
 
+
+app.use(session({
+	secret: process.env.SESSION_SECRET_KEY,
+	resave: false,
+	saveUninitialized: false,
+  }));
 app.use(express.static(__dirname + "/public"));
 var cors = require("cors");
 
-app.use(cors());
+app.use(cors({ origin:true, credentials:true }))
 
 //set views file
 app.set("views", path.join(__dirname, "views"));

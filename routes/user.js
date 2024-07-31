@@ -4,7 +4,7 @@ var express = require("express"),
   token = require("../controller/token");
 
 router.get("/get_data/:offset/:limit/:sort", token.validateToken, user.get_data);
-router.get("/refresh/token", token.refreshToken);
+router.post("/refresh/token", token.refreshToken);
 router.get("/get_data_by_id/:id", token.validateToken, user.get_data_by_id);
 router.post("/save_data", user.save_data);
 router.put("/update_data/:id", token.validateToken, user.update_data);

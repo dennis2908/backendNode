@@ -48,19 +48,26 @@ exports.validateToken  = (async function(req, res, next){
 exports.refreshToken  = (async function(req, res){
     
 	
-    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    let jwtRefreshToken = process.env.REFRESH_TOKEN_SECRET;
+
+	console.log(12122,jwtRefreshToken)
+	
+
+	const refreshToken = await req.cookies;
+
+		console.log(12222,refreshToken)
 
     try {
 		let token = ""
 
 		
-		if (req.headers.authorization.split(' ')[0] === 'Bearer') {
-			token = req.headers.authorization.split(' ')[1];
-		} 
+		const refreshToken = req.session.jwt;
 
-		jwt.verify(token, jwtSecretKey, (err) => {
+		console.log(12222,refreshToken)
+
+		jwt.verify(refreshToken, jwtRefreshToken, (err) => {
 			if (err) {
-				return res.status(401).send("need auth");
+				return res.status(401).send("refresh token expires");
 			}	
 			let jwtSecretKey = process.env.JWT_SECRET_KEY;
 			let data = {
@@ -70,11 +77,13 @@ exports.refreshToken  = (async function(req, res){
 			const newtoken = jwt.sign(data, jwtSecretKey);
 			res.json({"new token":newtoken});	
 
-			const token = jwt.sign(data, jwtSecretKey);
+			const token = jwt.sign(data, jwtSecretKey, {
+				expiresIn: '30m'
+			});
 		  });
     } catch (error) {
         // Access Deniedzz
-		return res.status(401).send("need auth");
+		return res.status(401).send("refresh token expires");
     }
    
 });
