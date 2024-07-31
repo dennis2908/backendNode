@@ -31,7 +31,7 @@ exports.validateToken  = (async function(req, res, next){
 			token = req.headers.authorization.split(' ')[1];
 		} 
 
-		jwt.verify(token, jwtSecretKey, (err, decoded) => {
+		jwt.verify(token, jwtSecretKey, (err) => {
 			if (err) {
 				return res.status(401).send("Need Auth");
 			}	
@@ -40,6 +40,41 @@ exports.validateToken  = (async function(req, res, next){
     } catch (error) {
         // Access Denied
 		return res.status(401).send("Need Auth");
+    }
+   
+});
+
+
+exports.refreshToken  = (async function(req, res){
+    
+	
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+
+    try {
+		let token = ""
+
+		
+		if (req.headers.authorization.split(' ')[0] === 'Bearer') {
+			token = req.headers.authorization.split(' ')[1];
+		} 
+
+		jwt.verify(token, jwtSecretKey, (err) => {
+			if (err) {
+				return res.status(401).send("need auth");
+			}	
+			let jwtSecretKey = process.env.JWT_SECRET_KEY;
+			let data = {
+				time: Date(),
+				userId: 12,
+			}
+			const newtoken = jwt.sign(data, jwtSecretKey);
+			res.json({"new token":newtoken});	
+
+			const token = jwt.sign(data, jwtSecretKey);
+		  });
+    } catch (error) {
+        // Access Deniedzz
+		return res.status(401).send("need auth");
     }
    
 });
