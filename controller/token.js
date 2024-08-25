@@ -49,8 +49,6 @@ exports.refreshToken  = (async function(req, res){
     
 	
     let jwtRefreshToken = process.env.REFRESH_TOKEN_SECRET;
-
-	console.log(12122,jwtRefreshToken)
 	
 
 	const refreshToken = await req.cookies;
@@ -69,10 +67,10 @@ exports.refreshToken  = (async function(req, res){
 			if (err) {
 				return res.status(401).send("refresh token expires");
 			}	
+			const decoded = jwt.verify(refreshToken, jwtRefreshToken);
 			let jwtSecretKey = process.env.JWT_SECRET_KEY;
 			let data = {
-				time: Date(),
-				userId: 12,
+				id:decoded.data.id
 			}
 			const newtoken = jwt.sign(data, jwtSecretKey);
 			res.json({"new token":newtoken});	

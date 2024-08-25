@@ -29,6 +29,10 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const passport    = require('passport');
+
+require('./passport');
+
 var session = require("express-session");
 
 const cookieParser = require('cookie-parser');
@@ -84,7 +88,7 @@ app.use("/role", role);
 
 app.use("/user", user);
 
-app.use("/branch", branch);
+app.use("/branch", passport.authenticate('jwt', {session: false}),branch);
 
 app.use("/company", company);
 
