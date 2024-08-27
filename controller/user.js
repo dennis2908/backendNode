@@ -82,6 +82,7 @@ exports.get_data  = (async function(req, res){
 //   console.log(_sql_rest_url);
   var rows = await pool.query(_sql_rest_url)
   res.json(rows.rows); 
+  timer({ ...metricsLabels, success: "true" });	   
   
 } catch (e) {
 	timer({ ...metricsLabels, success: "false" });
