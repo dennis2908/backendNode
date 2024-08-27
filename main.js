@@ -53,6 +53,8 @@ const http_response_rate_histogram = new client.Histogram({
     1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 10,
   ],
 });
+
+const dataPrometheus = require("./utils/metrics");
 // * The node_js memory guage for measuring the memory of the application in use
 const nodejs_memory = new client.Gauge({
   name: "node_memory_usage_bytes",
@@ -68,6 +70,7 @@ client.collectDefaultMetrics({
   register: register,
   prefix: "node_", // * Prefixes the default app metrics name with the specified string
 });
+
 // * Registers the HTTP request counter metric
 register.registerMetric(http_request_total);
 // * Registers the HTTP response rate metric
@@ -76,6 +79,8 @@ register.registerMetric(http_response_rate_histogram);
 register.registerMetric(nodejs_memory);
 // * Registers the Node Js cpu usage guage metric
 register.registerMetric(nodejs_cpu_usage);
+
+register.registerMetric(dataPrometheus.restResponseTimeHistogram);
 
 /**
  * Calculates the current CPU usage

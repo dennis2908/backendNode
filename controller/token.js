@@ -14,6 +14,8 @@ const pool = require('../database.js');
 
  const bcrypt = require("bcrypt");
 
+ var dataPrometheus = require("../utils/metrics");
+
  dotenv.config();
 
 
@@ -46,14 +48,19 @@ exports.validateToken  = (async function(req, res, next){
 
 
 exports.refreshToken  = (async function(req, res){
-    
+
+	const metricsLabels = {
+		route: "/user/refresh/token",
+  		method: "POST",
+		operation: "refreshToken",
+	  };
+
+	const timer = dataPrometheus.restResponseTimeHistogram.startTimer();    
 	
     let jwtRefreshToken = process.env.REFRESH_TOKEN_SECRET;
 	
 
 	const refreshToken = await req.cookies;
-
-		console.log(12222,refreshToken)
 
     try {
 		let token = ""
@@ -64,9 +71,7 @@ exports.refreshToken  = (async function(req, res){
 		console.log(12222,refreshToken)
 
 		jwt.verify(refreshToken, jwtRefreshToken, (err) => {
-			if (err) {
-				return res.status(401).send("refresh token expires");
-			}	
+	
 			const decoded = jwt.verify(refreshToken, jwtRefreshToken);
 			let jwtSecretKey = process.env.JWT_SECRET_KEY;
 			let data = {
@@ -79,8 +84,11 @@ exports.refreshToken  = (async function(req, res){
 				expiresIn: '30m'
 			});
 		  });
+
+		  timer({ ...metricsLabels, success: "true" });	
     } catch (error) {
         // Access Deniedzz
+		timer({ ...metricsLabels, success: "false" });	
 		return res.status(401).send("refresh token expires");
     }
    
