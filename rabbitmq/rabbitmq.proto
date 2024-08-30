@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package rabbitMQPackage;
+
+service RabbitMQ {
+  rpc CreaterabbitMQ(rabbitMQSvc) returns (rabbitMQSvc);
+}
+
+message voidNoParam {}
+
+message rabbitMQSvc {
+  int32 id = 1;
+  string queue = 2;
+  string send = 3;
+}
+
+message rabbitMQSvcs {
+  repeated rabbitMQSvc rabbitMQSvc = 1;
+}
+
+message rabbitMQId {
+  int32 id = 1;
+}

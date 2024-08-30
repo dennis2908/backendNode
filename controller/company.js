@@ -20,6 +20,17 @@ const excelJS = require("exceljs");
 
 var d = new Date(); // for now
 
+const grpc = require("@grpc/grpc-js");
+const protoLoader = require("@grpc/proto-loader")
+const packageDef = protoLoader.loadSync("rabbitmq/rabbitmq.proto", {});
+const grpcObject = grpc.loadPackageDefinition(packageDef);
+const rabbitMQPackage = grpcObject.rabbitMQPackage;
+
+const text = process.argv[2];
+
+const client = new rabbitMQPackage.RabbitMQ("localhost:50000", grpc.credentials.createInsecure())
+
+
 /** Sync */
 function randomStringAsBase64Url(size) {
   return crypto.randomBytes(size).toString("base64url");
@@ -266,43 +277,25 @@ exports.save_data = async function (req, res) {
   });
   await saveuserlog.save();
 
-  amqp.connect("amqp://localhost", function (error0, connection) {
-    if (error0) {
-      throw error0;
-    }
-    connection.createChannel(function (error1, channel) {
-      if (error1) {
-        throw error1;
-      }
-      var queue = "save.company";
 
-      channel.assertQueue(queue, {
-        durable: false
-      });
+  client.CreaterabbitMQ({
+    "queue": "save.company",
+    "send" : JSON.stringify(req.body)
+  }, () => {
+  
+    console.log("sent data company rabbitmq GRPC server to save the data " + JSON.stringify(req.body))
+  
+  })
 
-      channel.sendToQueue(queue, Buffer.from(JSON.stringify(req.body)));
-      console.log(" [x] Sent %s", JSON.stringify(req.body));
-    });
-  });
+  client.CreaterabbitMQ({
+    "queue": "email.company",
+    "send" : JSON.stringify(req.body)
+  }, () => {
+  
+    console.log("sent data company rabbitmq GRPC server to email" + JSON.stringify(req.body))
+  
+  })
 
-  amqp.connect("amqp://localhost", function (error0, connection) {
-    if (error0) {
-      throw error0;
-    }
-    connection.createChannel(function (error1, channel) {
-      if (error1) {
-        throw error1;
-      }
-      var queue = "email.company";
-
-      channel.assertQueue(queue, {
-        durable: false
-      });
-
-      channel.sendToQueue(queue, Buffer.from(JSON.stringify(req.body)));
-      console.log(" [x] Sent %s", JSON.stringify(req.body));
-    });
-  });
   res.json(true);
 };
 
