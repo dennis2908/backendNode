@@ -17,7 +17,7 @@ function randomInteger(min, max) {
   }
 
 exports.createRabbitUtil = (payload) => {
-    host = balancer[randomInteger(0,2)]
+    host = balancer[randomInteger(0,balancer.length)]
 
     const client = new rabbitMQPackage.RabbitMQ(host, grpc.credentials.createInsecure())
 
