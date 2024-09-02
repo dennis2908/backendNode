@@ -28,6 +28,9 @@ const rabbitMQPackage = grpcObject.rabbitMQPackage;
 
 const text = process.argv[2];
 
+let { createRabbitUtil} =  require("../loadBalancer/utils.js");
+
+
 const client = new rabbitMQPackage.RabbitMQ("localhost:50000", grpc.credentials.createInsecure())
 
 
@@ -277,24 +280,31 @@ exports.save_data = async function (req, res) {
   });
   await saveuserlog.save();
 
+  try {
+        await createRabbitUtil(req.body);
+       } catch (error) {
+        console.log(error);
+        throw error;
+    }
 
-  client.CreaterabbitMQ({
-    "queue": "save.company",
-    "send" : JSON.stringify(req.body)
-  }, () => {
-  
-    console.log("sent data company rabbitmq GRPC server to save the data " + JSON.stringify(req.body))
-  
-  })
 
-  client.CreaterabbitMQ({
-    "queue": "email.company",
-    "send" : JSON.stringify(req.body)
-  }, () => {
+  // client.CreaterabbitMQ({
+  //   "queue": "save.company",
+  //   "send" : JSON.stringify(req.body)
+  // }, () => {
   
-    console.log("sent data company rabbitmq GRPC server to email" + JSON.stringify(req.body))
+  //   console.log("sent data company rabbitmq GRPC server to save the data " + JSON.stringify(req.body))
   
-  })
+  // })
+
+  // client.CreaterabbitMQ({
+  //   "queue": "email.company",
+  //   "send" : JSON.stringify(req.body)
+  // }, () => {
+  
+  //   console.log("sent data company rabbitmq GRPC server to email" + JSON.stringify(req.body))
+  
+  // })
 
   res.json(true);
 };

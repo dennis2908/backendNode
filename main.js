@@ -13,6 +13,20 @@ const client = require("prom-client");
 const memoryUsage = require("process").memoryUsage;
 const cpus = require("os").cpus;
 
+const cluster = require("cluster")
+const cpu = require("os").cpus().length
+
+if(cluster.isMaster){
+  for(let i=0;i<cpu;i++){
+      cluster.fork()
+  }
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} has terminated.`);
+    console.log('Initiating replacement worker.');
+    cluster.fork();
+  });
+}else{
+
 
 const metric_label_enum = {
   PATH: "path",
@@ -301,3 +315,5 @@ app.post("/loginFrontEnd", (req, res) => {
 app.listen(process.env.PORT || 8000, function () {
   console.log("server running on port 8000", "");
 });
+
+}
