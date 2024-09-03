@@ -8,7 +8,7 @@ const rabbitMQPackage = grpcObject.rabbitMQPackage;
 const cluster = require("cluster")
 const cpu = require("os").cpus().length
 
-const balancer = ['localhost:50000', 'localhost:50001', 'localhost:50002']
+const dotenv = require("dotenv");
 
 
 
@@ -17,7 +17,9 @@ function randomInteger(min, max) {
   }
 
 exports.createRabbitUtil = (payload) => {
-    host = balancer[randomInteger(0,balancer.length-1)]
+    ran_number = randomInteger(0,parseInt(process.env.grpc_clone_total)-1)
+
+    let host = "localhost:"+(parseInt(process.env.grpc_start_server)+ran_number)
 
     const client = new rabbitMQPackage.RabbitMQ(host, grpc.credentials.createInsecure())
 

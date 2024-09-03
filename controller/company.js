@@ -24,14 +24,14 @@ const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader")
 const packageDef = protoLoader.loadSync("rabbitmq/rabbitmq.proto", {});
 const grpcObject = grpc.loadPackageDefinition(packageDef);
-const rabbitMQPackage = grpcObject.rabbitMQPackage;
+// const rabbitMQPackage = grpcObject.rabbitMQPackage;
 
-const text = process.argv[2];
+// const text = process.argv[2];
 
 let { createRabbitUtil} =  require("../loadBalancer/utils.js");
 
 
-const client = new rabbitMQPackage.RabbitMQ("localhost:50000", grpc.credentials.createInsecure())
+// const client = new rabbitMQPackage.RabbitMQ("localhost:50000", grpc.credentials.createInsecure())
 
 
 /** Sync */

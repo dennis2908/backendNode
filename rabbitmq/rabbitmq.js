@@ -5,6 +5,9 @@ const grpcObject = grpc.loadPackageDefinition(packageDef);
 const rabbitMQPackage = grpcObject.rabbitMQPackage;
 var amqp = require("amqplib/callback_api");
 
+const dotenv = require("dotenv");
+
+
 const cluster = require("cluster")
 const cpu = require("os").cpus().length
 
@@ -55,12 +58,14 @@ function CreaterabbitMQ (call, callback) {
   callback(null, { rabbitmq });
 }
 
+for(let i = 0;i<parseInt(process.env.grpc_clone_total);i++)
+
   server.bindAsync(
-    "127.0.0.1:50000",
+    "127.0.0.1:"+(parseInt(process.env.grpc_start_server+1)),
     grpc.ServerCredentials.createInsecure(),
     (error, port) => {
       console.log("Server at port:", port);
-      console.log("Server running at http://127.0.0.1:50000");
+      console.log("Server running at http://127.0.0.1:"+(parseInt(process.env.grpc_start_server+1)));
       // server.start();
     }
   );
