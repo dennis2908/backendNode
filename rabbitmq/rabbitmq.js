@@ -7,6 +7,10 @@ var amqp = require("amqplib/callback_api");
 
 const dotenv = require("dotenv");
 
+const path = require("path");
+
+dotenv.config({ path: path.join(__dirname, "../.env") });
+
 
 const cluster = require("cluster")
 const cpu = require("os").cpus().length
@@ -33,7 +37,7 @@ server.addService(rabbitMQPackage.RabbitMQ.service,
       "CreaterabbitMQ": CreaterabbitMQ,
    });
 
-function CreaterabbitMQ (call, callback) {
+async function CreaterabbitMQ (call, callback) {
   const rabbitMQ = call.request;
   console.log(13232123,rabbitMQ.send);
   console.log(13232123,rabbitMQ.queue);
@@ -58,35 +62,23 @@ function CreaterabbitMQ (call, callback) {
   callback(null, { rabbitmq });
 }
 
-for(let i = 0;i<parseInt(process.env.grpc_clone_total);i++)
+console.log(1212,process.env.grpc_clone_total);
 
-  server.bindAsync(
-    "127.0.0.1:"+(parseInt(process.env.grpc_start_server+1)),
+let grpc_clone_total = process.env.grpc_clone_total
+
+let port = parseInt(process.env.grpc_start_server)
+
+for(let i = 0;i<parseInt(process.env.grpc_clone_total);i++){
+
+
+   server.bindAsync(
+    "127.0.0.1:"+(parseInt(process.env.grpc_start_server)+i),
     grpc.ServerCredentials.createInsecure(),
     (error, port) => {
-      console.log("Server at port:", port);
-      console.log("Server running at http://127.0.0.1:"+(parseInt(process.env.grpc_start_server+1)));
+      console.log("Server at port:", (parseInt(process.env.grpc_start_server)+i));
+      console.log("Server running at http://127.0.0.1:"+(parseInt(process.env.grpc_start_server)+i));
       // server.start();
     }
   );
-
-  server.bindAsync(
-    "127.0.0.1:50001",
-    grpc.ServerCredentials.createInsecure(),
-    (error, port) => {
-      console.log("Server at port:", port);
-      console.log("Server running at http://127.0.0.1:50001");
-      // server.start();
-    }
-  );
-
-  server.bindAsync(
-    "127.0.0.1:50002",
-    grpc.ServerCredentials.createInsecure(),
-    (error, port) => {
-      console.log("Server at port:", port);
-      console.log("Server running at http://127.0.0.1:50002");
-      // server.start();
-    }
-  );
+}
 }
