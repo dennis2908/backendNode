@@ -8,7 +8,7 @@ const rabbitMQPackage = grpcObject.rabbitMQPackage;
 const cluster = require("cluster")
 const cpu = require("os").cpus().length
 
-const balancer = ['http://127.0.0.1:50000', 'http://127.0.0.1:50001', 'http://127.0.0.1:50002']
+const balancer = ['localhost:50000', 'localhost:50001', 'localhost:50002']
 
 
 
@@ -17,7 +17,7 @@ function randomInteger(min, max) {
   }
 
 exports.createRabbitUtil = (payload) => {
-    host = balancer[randomInteger(0,balancer.length)]
+    host = balancer[randomInteger(0,balancer.length-1)]
 
     const client = new rabbitMQPackage.RabbitMQ(host, grpc.credentials.createInsecure())
 
